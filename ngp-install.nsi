@@ -1,4 +1,5 @@
 !include "MUI2.nsh"
+!include LogicLib.nsh
 
 Unicode True
 
@@ -31,21 +32,27 @@ FunctionEnd
 
 Section "Install"
   SectionIn RO
-
   SetOutPath "$INSTDIR"
-  IfFileExists "$INSTDIR\physics" 0 skipPhysicsDir
-    File /r "files\physics"
 
-  skipPhysicsDir:
-  File /r "files\plugins"
-  File /r "files\work-temp"
+  Var /GLOBAL physicsDirExists
+  StrCpy $physicsDirExists "false"
+  IfFileExists "$INSTDIR\physics" 0 +2
+    StrCpy $physicsDirExists "true"
 
+  File /r "files\"
 
   CopyFiles /SILENT "$INSTDIR\physics.rbz" "$INSTDIR\work-temp"
+  CreateDirectory "$INSTDIR\work-temp\physics"
+;--- Include CopyFiles /SILENT "$INSTDIR\physics\xy" "$INSTDIR\work-temp\physics" for every file or directory from physics dir here
+  CopyFiles /SILENT "$INSTDIR\physics\physics.lsp" "$INSTDIR\work-temp\physics"
 
   ExecWait '"$INSTDIR\work-temp\7za.exe" u $INSTDIR\work-temp\physics.rbz $INSTDIR\work-temp\Physics'
 
   CopyFiles /SILENT "$INSTDIR\work-temp\physics.rbz" "$INSTDIR"
+
+  ${If} $physicsDirExists == "false"
+    RmDir /r "$INSTDIR\physics"
+  ${EndIf}
 
   RmDir /r "$INSTDIR\work-temp"
 
