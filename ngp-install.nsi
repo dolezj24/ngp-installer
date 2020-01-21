@@ -30,6 +30,8 @@ Function .onInit
   !insertmacro MUI_LANGDLL_DISPLAY
 FunctionEnd
 
+!define WORK_DIR "$TEMP\ngp-installer-work-temp"
+
 Section "Install"
   SectionIn RO
   SetOutPath "$INSTDIR"
@@ -41,19 +43,22 @@ Section "Install"
 
   File /r "files\"
 
-  CopyFiles /SILENT "$INSTDIR\physics.rbz" "$INSTDIR\work-temp"
-  CreateDirectory "$INSTDIR\work-temp\physics"
-;--- Include CopyFiles /SILENT "$INSTDIR\physics\xy" "$INSTDIR\work-temp\physics" for every file or directory from physics dir here
-  CopyFiles /SILENT "$INSTDIR\physics\physics.lsp" "$INSTDIR\work-temp\physics"
+  CreateDirectory "${WORK_DIR}"
+  CopyFiles /SILENT "$INSTDIR\physics.rbz" "${WORK_DIR}"
+  Rename "$INSTDIR\7za.exe" "${WORK_DIR}\7za.exe"
+  CreateDirectory "${WORK_DIR}\physics"
+;--- Include CopyFiles /SILENT "$INSTDIR\physics\xy" "${WORK_DIR}\physics" for every file or directory from physics dir here
+  CopyFiles /SILENT "$INSTDIR\physics\physics.lsp" "${WORK_DIR}\physics"
 
-  ExecWait '"$INSTDIR\work-temp\7za.exe" u $INSTDIR\work-temp\physics.rbz $INSTDIR\work-temp\Physics'
+  SetFileAttributes "${WORK_DIR}\physics.rbz" NORMAL
+  ExecWait '"${WORK_DIR}\7za.exe" u ${WORK_DIR}\physics.rbz ${WORK_DIR}\Physics'
 
-  CopyFiles /SILENT "$INSTDIR\work-temp\physics.rbz" "$INSTDIR"
+  CopyFiles /SILENT "${WORK_DIR}\physics.rbz" "$INSTDIR"
 
   ${If} $physicsDirExists == "false"
     RmDir /r "$INSTDIR\physics"
   ${EndIf}
 
-  RmDir /r "$INSTDIR\work-temp"
+  RmDir /r "${WORK_DIR}"
 
 SectionEnd
