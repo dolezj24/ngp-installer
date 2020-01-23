@@ -51,7 +51,7 @@ Section "Install"
   CopyFiles /SILENT "$INSTDIR\physics\physics.lsp" "${WORK_DIR}\physics"
 
   SetFileAttributes "${WORK_DIR}\physics.rbz" NORMAL
-  ExecWait '"${WORK_DIR}\7za.exe" u ${WORK_DIR}\physics.rbz ${WORK_DIR}\Physics'
+  ExecWait '"${WORK_DIR}\7za.exe" a ${WORK_DIR}\physics.rbz ${WORK_DIR}\Physics'
 
   CopyFiles /SILENT "${WORK_DIR}\physics.rbz" "$INSTDIR"
 
