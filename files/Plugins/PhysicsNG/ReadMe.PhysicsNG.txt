@@ -1,5 +1,5 @@
 
-Next Generation Physics (NGP) Plugin (PhysicsNG, Version 6.2) for RBR 1.02 SSE
+Next Generation Physics (NGP) Plugin (PhysicsNG, Version 6.3) for RBR 1.02 SSE
 ===============================================================================
 
 This plugin for Richard Burns Rally enhances RBR's builtin physics. Tyres and
@@ -285,6 +285,15 @@ values related to engine, springs, dampers, brakes and tyres etc.
 See section "UDP Telemetry" below.
 
 
+144 Hz monitor stutter fix
+--------------------------
+It has been reported that the game suffers from micro stuttering after about
+one hour of game play on modern 144 Hz monitors.
+This plugin allows you to configure the physics update frequency in a range
+from 137 Hz to 153 Hz, so the stuttering disappears if set to 150, while animations and the
+like are still running smoothly.
+
+
 
 Installation
 ---------------------------------------------------------------------
@@ -445,8 +454,17 @@ telemetryTics=5
 udpTelemetry=0
 
 ; Network address to send UDP datagrams to.
-; The port is hardcoded: 6776
 udpTelemetryAddress=127.0.0.1
+
+; The port to send UDP datagrams to.
+: Default: 6776
+udpTelemetryPort=6776
+
+; The physics update rate in Hz.
+; 0 - use default RBR update rate (~143 Hz).
+; Valid values:
+; 137 up to 153
+physicsUpdateRate=0
 
 
 Telemetry Recorder
@@ -489,7 +507,8 @@ found in "rbr.telemetry.TelemetryData.h" in the directory
 "Plugins/PhysicsNG/sdk" .
 UDP telemetry is only emitted in normal GAME mode, not in REPLAY mode.
 You can use the telemetry values e.g. to control a motion platform.
-The target address can be set in the INI file, the data is sent to port 6776.
+The target address and the port can be set in the INI file, with port 6776
+being the default.
 Remember to enable this port in your operation system's firewall
 configuration.
 
@@ -526,6 +545,11 @@ especially the readme and documentation files.
 
 Version History
 ---------------------------------------------------------------------
+6.3 2020-01-30
+    * UDP telemetry port configurable
+    * physics update rate configurable (144 Hz monitor stutter fix)
+    * snow surfaces and snow walls adjusted
+
 6.2 2020-01-02
     * new feature: UDP telemetry
     * added telemetry values: roll, pitch, yaw

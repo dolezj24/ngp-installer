@@ -147,7 +147,7 @@
 
   vecGravity 0 0 -9.81
 
-  PhysicsRevision_NGP 748
+  PhysicsRevision_NGP 758
 
   Flags
   +FACE_COLL
